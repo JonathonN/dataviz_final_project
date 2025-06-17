@@ -1,0 +1,140 @@
+  ---
+title: "Data Visualization - Mini-Project 2"
+author: "Jonathon Nazario `jnazario0512@floridapoly.edu`"
+output:
+  html_document:
+    self_contained: true
+
+    df_print: paged
+---
+
+This project explores and visualizes two datasets:
+
+Florida Lakes Shapefile (spatial data)
+
+Atlanta 2019 Daily Weather Data (CSV format)
+
+The assignment goal was to use different data visualization techniques—including spatial, interactive, and model-based visualizations—to uncover trends and communicate insights effectively.
+
+Initially, I aimed to create the following types of visualizations:
+
+Spatial Map: Displaying water bodies in Florida using shapefiles from Natural Earth.
+
+Interactive Plot: Using leaflet to build an interactive map of lakes in Florida, where clicking reveals the lake names.
+
+Model-Based Visualization: Fitting a linear regression model to weather data to analyze how humidity and dew point affect daily high temperatures, and visualizing the model’s coefficients.
+
+
+```{r}
+library(tidyverse)
+library(leaflet)
+library(sf)
+```
+
+```{r}
+fl_lakes <- st_read("C:/Users/se08m/Downloads/dataviz_mini-project_02/dataviz_mini-project_02/data/Florida_Lakes/Florida_Lakes.shp")
+
+ggplot(fl_lakes) +
+  geom_sf(fill = "lightblue", color = "blue") +
+  theme_minimal() +
+  labs(title = "Lakes in Florida", caption = "Source: Florida_Lakes.shp")
+
+```
+
+```{r}
+leaflet(fl_lakes) %>%
+  addTiles() %>%
+  addPolygons(color = "blue", weight = 1, fillOpacity = 0.5,
+              popup = ~NAME)
+```
+
+```{r}
+weather <- read_csv("C:/Users/se08m/Downloads/dataviz_mini-project_02/dataviz_mini-project_02/data/atl-weather.csv")
+```
+
+```{r}
+library(broom)
+
+weather <- weather %>%
+  mutate(date = as.Date(time))
+
+weather_model <- lm(temperatureHigh ~ humidity + dewPoint, data = weather)
+
+summary(weather_model)
+
+```
+
+```{r}
+# Visualize coefficients using broom
+tidy(weather_model) %>%
+  ggplot(aes(x = reorder(term, estimate), y = estimate)) +
+  geom_col(fill = "#0072B2") +
+  geom_errorbar(aes(ymin = estimate - std.error, ymax = estimate + std.error), width = 0.2) +
+  coord_flip() +
+  labs(title = "Linear Model Coefficients",
+       x = "Predictor",
+       y = "Estimated Effect on High Temperature (°F)") +
+  theme_minimal()
+
+```
+
+```{r}
+ggplot(weather, aes(x = dewPoint, y = temperatureHigh)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm", se = TRUE, color = "blue") +
+  labs(title = "Relationship Between Dew Point and High Temperature",
+       x = "Dew Point (°F)",
+       y = "High Temperature (°F)") +
+  theme_minimal()
+
+```
+
+
+
+
+
+
+1. Spatial Visualization
+Using leaflet, I created an interactive map of Florida’s lakes. The map allows users to pan and zoom across the state, clicking on lakes to reveal their names. This approach helps users engage directly with geographic data.
+
+Florida contains thousands of lakes, and interactive maps are effective in localizing and personalizing geographic data without overwhelming the viewer.
+
+2. Linear Model Analysis
+I modeled:
+
+
+Dew point has a strong positive relationship with high temperature (1.08°F increase per °F of dew point).
+
+Humidity has a negative association, possibly due to overlapping thermal properties or atmospheric saturation effects.
+
+R² = 0.9627, indicating the model explains 96.27% of the variation in daily high temperatures.
+
+Coefficients Plot (with error bars) visually summarized the strength and direction of each predictor.
+
+While dew point directly correlates with heat, humidity may inversely signal conditions with less temperature variation.
+
+3. Interactive Plot
+Using leaflet, I rendered:
+
+A basemap with addTiles()
+
+Polygons of lakes with popups showing names
+
+This fulfills the interactive requirement and makes sharing/embedding easier.
+
+The leaflet function initially failed due to trying to apply st_coordinates() to the full leaflet object. I corrected this by instead passing the shapefile directly to addPolygons() and referencing attributes properly for the popup.
+
+Date/time columns in the weather data required careful parsing due to mixed formats (dttm, chr).
+
+Creating a readable coefficients plot required using broom::tidy() and flipping the coordinate system with coord_flip() for better visibility.
+
+Clarity & Simplicity: Each chart includes clear labels, consistent color palettes, and direct visual mappings.
+
+Annotation: The regression model plot included error bars to reflect uncertainty.
+
+Engagement: Used interactivity to allow users to explore Florida’s lake data on their own terms.
+
+Reproducibility: The project uses an RStudio Project structure and .Rmd files so the analysis can be rerun and verified.
+
+With more time, I could:
+Animate temporal trends in weather using gganimate. Explore time-series decomposition of temperatures using tsibble. Include more spatial overlays, like city boundaries or heat maps of temperature deviations
