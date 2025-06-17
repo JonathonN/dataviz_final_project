@@ -30,7 +30,7 @@ In this project, I explored data on the weather in Tampa as well as cement and i
 
 **Sample data visualization:** 
 
-![Plot](project-03/Nazario_project_03_files/figure-html/unnamed-chunk-10-1.png)
+![Plot](project-03/Nazario_Project_03_files/figure-html/unnamed-chunk-10-1.png)
 
 
 ### Moving Forward
