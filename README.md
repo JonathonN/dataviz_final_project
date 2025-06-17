@@ -12,7 +12,7 @@ In the `project_01/` folder you can find that I looked into fuel.csv taking a lo
 
 **Sample data visualization:** 
 
-![Plot](project-01\Nazario_project_01_files\figure-html/unnamed-chunk-8-1.png)
+![Plot](project-01/Nazario_project_01_files/figure-html/unnamed-chunk-8-1.png)
 
 
 ## Project 02
@@ -20,9 +20,8 @@ In the `project_01/` folder you can find that I looked into fuel.csv taking a lo
 In this project, I explored the FL lakes shape file as well how peak temperature and dew point are related. Find the code and report in the `project_02/` folder.
 
 **Sample data visualization:** 
-![Plot](project-02\Nazario_project_02_files\figure-html/unnamed-chunk-8-1.png)
 
-
+![Plot](project-02/Nazario_project_02_files/figure-html/unnamed-chunk-8-1.png)
 
 
 ## Project 03
@@ -31,7 +30,7 @@ In this project, I explored data on the weather in Tampa as well as cement and i
 
 **Sample data visualization:** 
 
-![Plot](project-03\Nazario_project_03_files\figure-html/unnamed-chunk-10-1.png)
+![Plot](project-03/Nazario_project_03_files/figure-html/unnamed-chunk-10-1.png)
 
 
 ### Moving Forward
