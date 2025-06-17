@@ -8,36 +8,32 @@ The following is a sample of products created during the _"Data Visualization an
 
 ## Project 01
 
-In the `project_01/` folder you can find... _[add short description of your revised project here]_
+In the `project_01/` folder you can find that I looked into fuel.csv taking a look engine size, engine cylinders, displacement as well as asipration over time to take a look at fuel economy. 
 
 **Sample data visualization:** 
 
-_[include your favorite visualization from this project here]_
-<img src="https://raw.githubusercontent.com/aalhamadani/dataviz_final_project/main/figures/echarts.png" width="70%" height="70%">
+![Plot](project-01\Nazario_project_01_files\figure-html/unnamed-chunk-8-1.png)
 
 
 ## Project 02
 
-In this project, I explored ... _[short description of your revised project goes here]_ Find the code and report in the `project_02/` folder.
+In this project, I explored the FL lakes shape file as well how peak temperature and dew point are related. Find the code and report in the `project_02/` folder.
 
 **Sample data visualization:** 
+![Plot](project-02\Nazario_project_02_files\figure-html/unnamed-chunk-8-1.png)
 
-_[include your favorite visualization from this project here]_
-<img src="https://raw.githubusercontent.com/aalhamadani/dataviz_final_project/main/figures/fl_higher_ed.png" width="80%" height="80%">
 
-(you can place your figures in the `figures/` folder and use the `![](path_to_picture)` option to add the pictures here)
 
 
 ## Project 03
 
-In this project, I explored ... _[short description of the data visualizations you for this part of the project produced goes here]_
+In this project, I explored data on the weather in Tampa as well as cement and its factors to see how it ages as well as how its strength changes.
 
 **Sample data visualization:** 
 
-_[include your favorite visualization from this project here]_
-<img src="https://raw.githubusercontent.com/aalhamadani/dataviz_final_project/main/figures/concrete_density.png" width="80%" height="80%">
+![Plot](project-03\Nazario_project_03_files\figure-html/unnamed-chunk-10-1.png)
 
 
 ### Moving Forward
 
-_Please add here a short reflection on what you learned and what you plan to continue exploring in terms of data visualization, data storytelling, reproducible research, and/or related topics._
+I learned about the different ways to display the same information and need to be more creative in showing this information to be able to be unique. I also learned about using git desktop which has made my life so much easier.

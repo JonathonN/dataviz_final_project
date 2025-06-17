@@ -106,12 +106,34 @@ fuel <- fuel %>%
 I want to see how engine size and displacement change over time and effect fuel economy as well as turbos. 
 Step one was to look at engine displacement which is linked to engine cylinders due to physics. To see fuel economy but also filtering by aspiration type as turbos as supposed to allow for a smaller engine but allow for it to be more efficient.
 
+
 ``` r
-ggplot(fuel,mapping = aes(engine_displacement,combined_mpg_ft1,colour = Aspiration))+geom_point()+ ylim(0,60)+geom_smooth(se=FALSE)+  scale_color_manual(values = c("Turbocharged" = "#E41A1C", "Naturally Aspirated" = "#377EB8")) 
+ggplot(fuel, aes(x = engine_displacement, y = combined_mpg_ft1, color = Aspiration)) +
+  geom_point(alpha = 0.7, size = 2) +
+  geom_smooth(se = FALSE, method = "loess", linewidth = 1.2) +
+  scale_color_manual(
+    values = c("Turbocharged" = "#E41A1C", "Naturally Aspirated" = "#377EB8"),
+    name = "Aspiration Type"
+  ) +
+  scale_y_continuous(limits = c(0, 60), breaks = seq(0, 60, 10)) +
+  scale_x_continuous(breaks = seq(0, max(fuel$engine_displacement, na.rm = TRUE), 1)) +
+  labs(
+    title = "Fuel Efficiency vs Engine Displacement",
+    subtitle = "Comparing Turbocharged and Naturally Aspirated Engines",
+    x = "Engine Displacement (L)",
+    y = "Combined MPG"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(
+    plot.title = element_text(face = "bold", size = 16),
+    plot.subtitle = element_text(size = 12, margin = margin(b = 10)),
+    legend.position = "top",
+    panel.grid.minor = element_blank()
+  )
 ```
 
 ```
-## `geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
+## `geom_smooth()` using formula = 'y ~ x'
 ```
 
 ```
@@ -125,6 +147,7 @@ ggplot(fuel,mapping = aes(engine_displacement,combined_mpg_ft1,colour = Aspirati
 ```
 
 ![](Nazario_project_01_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
+
 Looking at th graph we can see that as the engine is bigger the lower the fuel economy. We can also see that turbos are helpful in certain applications but not all I am assuming this is due to the use of turbos trying to make a smaller engine simply more powerful but technically less efficient then the NA variant of the same size.
 
 Next looking at displacement and cylinders by aspiration we can see that with smaller engines NA and turbo charged engines are the same but as engines get bigger turbo charged engines are smaller for the same number on cylinders which is to be expected as for the most effective cylinder it is almost perfect 500cc per cylinder which does line up. All the way until the big engines.
@@ -153,21 +176,27 @@ This next graph is showing us fuel economy overtime as well as engine displaceme
 ``` r
 fuel %>% 
   group_by(year) %>% 
-  summarise(mean_mpg = mean(combined_mpg_ft1, na.rm = TRUE),mean_displacement = mean(engine_displacement, na.rm = TRUE)) %>%
-  ggplot(aes(x = year, y = mean_mpg,color=mean_displacement)) + geom_point()+geom_smooth(se=FALSE)+   scale_color_viridis_c(option = "plasma", end = 0.95)
-```
-
-```
-## `geom_smooth()` using method = 'loess' and formula = 'y ~ x'
-```
-
-```
-## Warning: The following aesthetics were dropped during statistical transformation:
-## colour.
-## ℹ This can happen when ggplot fails to infer the correct grouping structure in
-##   the data.
-## ℹ Did you forget to specify a `group` aesthetic or to convert a numerical
-##   variable into a factor?
+  summarise(
+    mean_mpg = mean(combined_mpg_ft1, na.rm = TRUE),
+    mean_displacement = mean(engine_displacement, na.rm = TRUE)
+  ) %>%
+  ggplot(aes(x = year, y = mean_mpg)) +
+  geom_line(color = "gray40", linewidth = 1) +
+  geom_point(aes(color = mean_displacement, size = mean_displacement), alpha = 0.8) +
+  scale_color_viridis_c(option = "plasma", end = 0.95, name = "Avg Displacement") +
+  scale_size(range = c(2, 6), guide = "none") +
+  labs(
+    title = "Average Fuel Economy Over Time",
+    subtitle = "Point color and size represent average engine displacement",
+    x = "Year",
+    y = "Average MPG"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(
+    plot.title = element_text(face = "bold", size = 16),
+    plot.subtitle = element_text(size = 12),
+    legend.position = "right"
+  )
 ```
 
 ![](Nazario_project_01_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
@@ -176,28 +205,48 @@ Finally I just have a graph showing how engine displacement changed overtime wit
 ``` r
 fuel %>% 
   group_by(year) %>% 
-  summarise(mean_displacement = mean(engine_displacement, na.rm = TRUE),mean_cylinders = mean(engine_cylinders, na.rm = TRUE)) %>%
-  ggplot(aes(x = year, y = mean_displacement,colour = mean_cylinders)) + geom_point()+geom_smooth(se=FALSE)+ scale_color_viridis_c(option = "plasma", end = 0.95)
-```
-
-```
-## `geom_smooth()` using method = 'loess' and formula = 'y ~ x'
-```
-
-```
-## Warning: The following aesthetics were dropped during statistical transformation:
-## colour.
-## ℹ This can happen when ggplot fails to infer the correct grouping structure in
-##   the data.
-## ℹ Did you forget to specify a `group` aesthetic or to convert a numerical
-##   variable into a factor?
+  summarise(
+    mean_displacement = mean(engine_displacement, na.rm = TRUE),
+    mean_cylinders = mean(engine_cylinders, na.rm = TRUE)
+  ) %>%
+  ggplot(aes(x = year, y = mean_displacement)) +
+  geom_line(color = "gray40", linewidth = 1) +
+  geom_point(aes(color = mean_cylinders, size = mean_cylinders), alpha = 0.9) +
+  scale_color_viridis_c(option = "plasma", end = 0.95, name = "Avg Cylinders") +
+  scale_size(range = c(2, 6), guide = "none") +
+  labs(
+    title = "Average Engine Displacement Over Time",
+    subtitle = "Color and size reflect average number of cylinders per year",
+    x = "Year",
+    y = "Engine Displacement (Liters)"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(
+    plot.title = element_text(face = "bold", size = 16),
+    plot.subtitle = element_text(size = 12),
+    legend.position = "right"
+  )
 ```
 
 ![](Nazario_project_01_files/figure-html/unnamed-chunk-9-1.png)<!-- -->
-###What were the original charts you planned to create for this assignments?
-I mentioned it at the start just a look into how displacement, cylinders, and aspiration all changed over time.
-###What story could you tell with your plots?
-The story I can tell is that at first we were not good at making engines and then we got better at making them which means smaller engines and better fuel economy but we can also see that turbos have allowed engines to be smaller not to mention that it can also show us times when gas prices are high as the auto makers will engineer cars that are better on gas. 
-###How did you apply the principles of data visualizations and design for this assignment?
-I put some colors in places that needed them and did some quick data wrangling. I also tried to use lines to show trends over time. But the main focus was to get as much as possible in as little visualizations as possible.
+
+
+### What were the original charts you planned to create for this assignment?
+The goal was to explore how engine displacement, number of cylinders, and the use of aspiration (e.g., turbocharging) have evolved over time. I initially planned to use line plots and grouped comparisons to visualize these trends clearly across multiple years.
+
+### What story could you tell with your plots?
+The plots reveal a story of technological progress. Early automotive engines were larger and less efficient. Over time, we see a shift toward smaller engines with better fuel economy. Turbocharging plays a key role in this transition—allowing smaller engines to deliver more power without sacrificing efficiency. Additionally, the trends may reflect periods of high gas prices, where automakers responded by engineering more fuel-efficient vehicles.
+
+### How did you apply the principles of data visualization and design in this assignment?
+I focused on clarity and simplicity. I used color strategically to distinguish between variables and highlight trends. I also performed quick data wrangling to prepare the dataset for analysis. Line plots were used to emphasize changes over time, and I made an effort to convey the key insights using the fewest number of visualizations necessary, without overwhelming the viewer.
+
+
+
+
+``` r
+library(tidyverse)
+library(viridis)
+```
+
+
 
